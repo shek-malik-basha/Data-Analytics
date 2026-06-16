@@ -167,8 +167,7 @@ select date_format('2025-06-10','%d-%m-%Y');
 
 use company_db;
 use walmart_db;
-select * from employee
-where first_name regexp '^m';
+select * from employee where first_name regexp '^m';
 
 select * from employee where first_name like '%a%' or first_name like '%r%';
 
@@ -184,3 +183,66 @@ select * from employee where first_name regexp 'ar';
 
 select * from employee where first_name regexp 'john|eric';
 
+delimiter //
+create procedure get_walmart_data()
+begin
+    select *
+    from walmart_sales;
+end //
+delimiter ;
+
+call get_walmart_data();
+select count(*) from walmart_sales;
+
+delimiter //
+create procedure holiday_sales()
+begin
+    select *
+    from walmart_sales
+    where holiday_flag = 1;
+end //
+delimiter ;
+call holiday_sales();
+delimiter //
+create procedure total_sales()
+begin
+    select sum(weekly_sales) as total_sales
+    from walmart_sales;
+end //
+delimiter ;
+call total_sales();
+
+delimiter //
+create procedure avg_sales_by_store()
+begin
+    select store,
+           avg(weekly_sales) as avg_sales
+    from walmart_sales
+    group by store;
+end //
+delimiter ;
+call avg_sales_by_store();
+
+delimiter //
+create procedure update_city(
+    in emp_id int,
+    in new_city varchar(30)
+)
+begin
+    update employee
+    set city = new_city
+    where employee_id = emp_id;
+end //
+delimiter ;
+
+call update_city(99980,'mumbai');
+
+select * from employee
+where employee_id = 99980;
+
+delimiter //
+create procedure first_name_f(in var varchar(25),out total_count int)
+begin select count(*)into total_count from employee where city = var;
+end //
+delimiter ;
+call first_name_f('mumbai', @count);
