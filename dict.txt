@@ -1,0 +1,4 @@
+emp_data = {
+    101:['shiva',24,'content strategist'],102:['udit',25,'content strategist'],103:['sonam',28,'Sr manager'],104:['ansari',29,'product lead'],105:['huzefa',32,'project manager']
+}
+emp_data
